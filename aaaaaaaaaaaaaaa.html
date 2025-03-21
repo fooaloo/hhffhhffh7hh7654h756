@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Suggestion Box</title>
+    <style>
+        /* Style the suggestion box */
+        #suggestion-box {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 300px;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        #suggestion-box h3 {
+            margin-top: 0;
+            font-size: 18px;
+        }
+
+        #suggestion-box input, #suggestion-box button {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 5px;
+            border: none;
+        }
+
+        #suggestion-box input {
+            font-size: 14px;
+        }
+
+        #suggestion-box button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+
+        #suggestion-box button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div id="suggestion-box">
+        <h3>Suggest a Movie</h3>
+        <input type="text" id="movie-input" placeholder="Enter movie name..." />
+        <button onclick="sendMovieSuggestion()">Submit Suggestion</button>
+    </div>
+
+    <script>
+        async function sendMovieSuggestion() {
+            const movie = document.getElementById('movie-input').value;
+            if (!movie) {
+                alert("Please enter a movie name.");
+                return;
+            }
+
+            const userAgent = navigator.userAgent;  // Get the user agent string as the device ID
+            const deviceId = `Device ID: ${userAgent}`;
+
+            const webhookUrl = 'YOUR_DISCORD_WEBHOOK_URL'; // Replace with your Discord webhook URL
+
+            const payload = {
+                content: `Movie suggestion: ${movie}\nDevice Info: ${deviceId}`,
+            };
+
+            try {
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload),
+                });
+
+                if (response.ok) {
+                    alert("Thank you for your suggestion!");
+                } else {
+                    alert("Failed to submit suggestion. Please try again.");
+                }
+            } catch (error) {
+                alert("Error submitting suggestion. Please check your internet connection.");
+            }
+
+            // Clear the input field after submission
+            document.getElementById('movie-input').value = '';
+        }
+    </script>
+</body>
+</html>
